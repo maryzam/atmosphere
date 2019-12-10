@@ -1,26 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+import useScrollPosition from "./hooks/useScrollPosition";
+
+const App = () => {
+
+  const [ height, setHeight ] = useState(0);
+
+  const updateHeight = ({ currPos }) => {
+    setHeight(currPos.y);
+  }
+
+  useScrollPosition({
+    effect: updateHeight
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{ height: "20000px"}}>
+      <p>I'm a hook!</p>
+      <p>Current height: { height }</p>
     </div>
   );
+
 }
 
 export default App;
