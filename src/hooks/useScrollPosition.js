@@ -10,10 +10,13 @@ const getScrollPosition = ({ element }) => {
  	const target = element ? element.current : document.body;
  	const position = target.getBoundingClientRect();
 
- 	return { x: position.left, y: position.top };
+ 	return { 
+ 		x: Math.floor(position.left),
+ 		y: Math.floor(position.top) 
+ 	};
 }
 
-const getThrottledCallback = ({ callback, delay = 200 }) => {
+const getThrottledCallback = ({ callback, delay = 100 }) => {
 	if (delay < 1) {
 		throw new Error("Delay between callback calls should be positive number");
 	}

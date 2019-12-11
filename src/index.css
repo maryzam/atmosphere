@@ -11,3 +11,37 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.wrap {
+	display: flex;
+}
+
+* ::-webkit-scrollbar {
+	display: none;
+	width: 0px;
+    height: 10px;
+}
+
+* {
+	scrollbar-width: none;
+}
+
+.meter {
+	height: 1000vh;
+	width: 10vw;
+	margin: auto;
+	background: steelblue;
+}
+
+.scene {
+	position: sticky;
+	top: 0;
+	left: 0;
+
+	height: 100vh;
+	width: 100vw;
+
+	background: darkblue;
+	color: white;
+	font-size: 2em;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect, useRef } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -8,19 +8,22 @@ const App = () => {
 
   const [ height, setHeight ] = useState(0);
 
-  const updateHeight = ({ currPos }) => {
-    setHeight(currPos.y);
-  }
+  const updateHeight = ({ currPos }) => { setHeight(currPos.y); }
 
-  useScrollPosition({
-    effect: updateHeight
-  });
+  useScrollPosition({ effect: updateHeight });
+
+  const screenRef = useRef(null);
+  
+  useLayoutEffect(() => {
+    const { current } = screenRef;
+    window.scrollTo(0, current.scrollHeight);
+  }, [])
 
   return (
-    <div style={{ height: "20000px"}}>
-      <p>I'm a hook!</p>
-      <p>Current height: { height }</p>
-    </div>
+    <main className="wrap" ref={ screenRef }>
+      <div className="scene">Height: { height }</div>
+      <div className="meter"></div>
+    </main>
   );
 
 }
