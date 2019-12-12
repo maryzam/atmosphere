@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useRef } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import useScrollPosition from "./hooks/useScrollPosition";
+import useRelativeScrollPosition from "./hooks/useRelativeScrollPosition";
 
 const App = () => {
 
@@ -10,7 +10,7 @@ const App = () => {
 
   const updateHeight = ({ currPos }) => { setHeight(currPos.y); }
 
-  useScrollPosition({ effect: updateHeight });
+  useRelativeScrollPosition({ effect: updateHeight });
 
   const screenRef = useRef(null);
   

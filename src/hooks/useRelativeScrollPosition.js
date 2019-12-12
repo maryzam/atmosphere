@@ -2,7 +2,7 @@ import { useRef, useLayoutEffect } from "react";
 
 const isBrowser = typeof window !== "undefined";
 
-const getScrollPosition = ({ element }) => {
+const calcRelativeScrollPosition = ({ element }) => {
  	if (!isBrowser) { 
  		throw new Error("useScrollPosition hook is unavailable in non-browser mode.");
  	}
@@ -10,9 +10,14 @@ const getScrollPosition = ({ element }) => {
  	const target = element ? element.current : document.body;
  	const position = target.getBoundingClientRect();
 
+ 	const maxHeight = position.height - window.innerHeight;
+ 	const maxWidth = position.width - window.innerWidth;
+ 	const x = 1 + (position.left / maxWidth);
+ 	const y = 1 + (position.top / maxHeight);
+
  	return { 
- 		x: Math.floor(position.left),
- 		y: Math.floor(position.top) 
+ 		x: x.toFixed(2),
+ 		y: y.toFixed(2) 
  	};
 }
 
@@ -43,11 +48,12 @@ const getThrottledCallback = ({ callback, delay = 100 }) => {
 	return { setDelayedCallback, cancelDelayedCallback };
 }
 
-const useScrollPosition = ({ effect, element = null, delay = 200 }) => {
+const useRelativeScrollPosition = ({ effect, element = null, delay = 200 }) => {
 
-	const position = useRef(getScrollPosition({}));
+	const position = useRef(calcRelativeScrollPosition({}));
+
 	const updateCurrentPos = () => {
-		const currPos = getScrollPosition({ element });
+		const currPos = calcRelativeScrollPosition({ element });
     	effect({ prevPos: position.current, currPos });
     	position.current = currPos;
 	}
@@ -59,9 +65,14 @@ const useScrollPosition = ({ effect, element = null, delay = 200 }) => {
 
 	useLayoutEffect(() => {
 
-		const registerHook = () => window.addEventListener('scroll', setDelayedCallback);
+		const registerHook = () => {
+			window.addEventListener('scroll', setDelayedCallback);
+			window.addEventListener('resize', setDelayedCallback);
+		}
+
 		const unregisterHook = () => {
 			window.removeEventListener('scroll', setDelayedCallback);
+			window.addEventListener('resize', setDelayedCallback);
 			cancelDelayedCallback();
 		};
 
@@ -71,4 +82,4 @@ const useScrollPosition = ({ effect, element = null, delay = 200 }) => {
 	})
 }
 
-export default useScrollPosition;
+export default useRelativeScrollPosition;
