@@ -9,5 +9,5 @@ export {
 	gasConstant,
 	gravity,
 	gamma,
-	R,
+	specificGasConstant,
 }
