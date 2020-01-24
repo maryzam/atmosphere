@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useRef } from 'react';
-import logo from './logo.svg';
 import './App.css';
+
+import calcStandartAtmosphere from "./calculators/standartAtmosphereCalculator";
 
 import useRelativeScrollPosition from "./hooks/useRelativeScrollPosition";
 
@@ -18,6 +19,10 @@ const App = () => {
     const { current } = screenRef;
     window.scrollTo(0, current.scrollHeight);
   }, [])
+
+
+  const atmosphereData = calcStandartAtmosphere(height);
+  console.log(atmosphereData);
 
   return (
     <main className="wrap" ref={ screenRef }>

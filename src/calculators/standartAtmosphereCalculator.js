@@ -1,10 +1,10 @@
 import atmosphereSampleData from "./atmosphereSampleData";
 
-import { airMolWeight, gasConstant, gravity, gamma, specificGasConstant } from "./physicalConstants";
+import { airMolecularWeight, gasConstant, gravity, gamma, specificGasConstant } from "./physicalConstants";
 
 const seaLevelAtmosphere = atmosphereSampleData.find(data => data.altitude === 0);
 
-const gMR = gravity * airMolWeight / gasConstant
+const gMR = gravity * airMolecularWeight / gasConstant
 
 const calculate = ({ altitude = 0, temperatureOffset = 0 }) => {
 
@@ -18,14 +18,14 @@ const calculate = ({ altitude = 0, temperatureOffset = 0 }) => {
 
 const calculateAirParameters = (baseData, temperatureOffset, altitude) => {
 
-  const baseTemperature = calcBaseTemperature(baseData);
+  const baseTemperature = calcBaseTemperature(baseData, altitude);
   const relativePressure = calcRelativePressure(baseData, baseTemperature, altitude);
 
   const temperature = baseTemperature + temperatureOffset;
 
   const speedOfSound = Math.sqrt(gamma * specificGasConstant * temperature);
   const pressure = relativePressure * seaLevelAtmosphere.pressure;
-  const density = seaLevelAtmosphere.density * pressureRelative * (seaLevelAtmosphere.temperature / temperature);
+  const density = seaLevelAtmosphere.density * relativePressure * (seaLevelAtmosphere.temperature / temperature);
 
   return {
     temperature,
@@ -35,7 +35,7 @@ const calculateAirParameters = (baseData, temperatureOffset, altitude) => {
   };
 }
 
-const calcBaseTemperature = () => {
+const calcBaseTemperature = (baseData, altitude) => {
 
   const deltaAltitude = altitude - baseData.altitude;
   const temperatureAltitudeOffset = baseData.temperatureLapseRate * deltaAltitude;
@@ -43,15 +43,15 @@ const calcBaseTemperature = () => {
   return baseData.temperature + temperatureAltitudeOffset;
 }
 
-const calcRelativePressure = (baseData, baseTemperature, altitude) => {
+const calcRelativePressure = (baseData, temperature, altitude) => {
 
   const deltaAltitude = altitude - baseData.altitude;
 
-  let pressureCoeff = (Math.abs(tempGrad) < 1e-10)  
-    ? Math.exp(-gMR * deltaAltitude / 1000 / baseData.temperature);
-    : Math.pow(baseData.temperature / temperature, gMR / tempGrad / 1000);
+  let pressureCoeff = (Math.abs(baseData.temperatureLapseRate) < 1e-10)  
+    ? Math.exp(-gMR * deltaAltitude / 1000 / baseData.temperature)
+    : Math.pow(baseData.temperature / temperature, gMR / baseData.temperatureLapseRate / 1000);
 
-  return pressureRelBase * pressureCoeff;
+  return baseData.pressure * pressureCoeff;
 }
 
 const getAtmosphereSection = (altitude) => {

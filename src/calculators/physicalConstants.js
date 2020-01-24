@@ -5,7 +5,7 @@ const gravity = 9.80665;              // [m/s^2]
 const gamma = 1.4; 					
 
 export {
-	airMolWeight,
+	airMolecularWeight,
 	gasConstant,
 	gravity,
 	gamma,
